@@ -8,12 +8,24 @@
 class Kreuzung : public Simulationsobjekt
 {
 public:
-    Kreuzung();
-    static void vVerbinde();
+    Kreuzung(const std::string &sName, double dTankstelle = 0.0);
+    ~Kreuzung() override;
+    static void vVerbinde(
+        const std::string &sNameHin,
+        const std::string &sNameRueck,
+        double dLaenge,
+        const std::shared_ptr<Kreuzung> &pStart,
+        const std::shared_ptr<Kreuzung> &pZiel,
+        Tempolimit eTempolimit = Tempolimit::Autobahn,
+        bool bUeberholverbot = true);
+
+        void vTanken(Fahrzeug &fahrzeug);
+        void vAnnahme(std::unique_ptr<Fahrzeug> fahrzeug, double dStartzeit);
+        void vSimulieren() override;
 
 protected:
     vertagt::VListe<std::unique_ptr<Weg>> p_pWeg;
-    double p_dTankstelle;
+    double p_dTankstelle = 0;
 };
 
 #endif

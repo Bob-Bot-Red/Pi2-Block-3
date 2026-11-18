@@ -303,7 +303,7 @@ void vAufgabe_6()
         }
 
         Weg stadt("Stadt", 500.0, Tempolimit::Innerorts);
-        Weg autobahn("Autobahn", 500.0, Tempolimit::Autobahn);
+        Weg autobahn("Autobahn", 500.0, Tempolimit::Autobahn, true);
 
         // Sofort fahrende Fahrzeuge
         stadt.vAnnahme(

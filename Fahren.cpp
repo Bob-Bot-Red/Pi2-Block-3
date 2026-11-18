@@ -3,24 +3,31 @@
 #include "Weg.h"
 #include "Streckenende.h"
 
+#include <algorithm>
+
 Fahren::Fahren(Weg &pWeg)
-: Verhalten(pWeg)
+    : Verhalten(pWeg)
 {
 }
 
 double Fahren::dStrecke(Fahrzeug &aFzg, double dZeitIntervall) const
 {
-    const double dRest = getWeg().getLaenge() - aFzg.getAbschnittstrecke();
-    if(dRest <= 0.0)
+    const double dPosition = aFzg.getAbschnittstrecke();
+    const double dRestBisWegende = getWeg().getLaenge() - dPosition;
+
+
+    if (dRestBisWegende <= 0.0)
     {
         throw Streckenende(aFzg, getWeg());
     }
 
-    const double dMoeglicheStrecke = aFzg.dGeschwindigkeit() * dZeitIntervall;
+    const double dRestbisSchrancke = getWeg().getVirtuelleSchranke() - dPosition;
 
-    if(dMoeglicheStrecke >= dRest)
+    if(dRestbisSchrancke <= 0.0)
     {
-            return dRest;
+        return 0.0;
     }
-    return dMoeglicheStrecke;
+
+    const double dMoeglicheStrecke = aFzg.dGeschwindigkeit() * dZeitIntervall;
+    return std::min(dMoeglicheStrecke, std::min(dRestBisWegende, dRestbisSchrancke));
 }

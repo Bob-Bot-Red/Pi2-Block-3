@@ -17,7 +17,7 @@ class Weg : public Simulationsobjekt
 
 public:
     Weg();
-    Weg(const std::string &sName, double dLaenge, Tempolimit eTempolimit = Tempolimit::Autobahn);
+    Weg(const std::string &sName, double dLaenge, Tempolimit eTempolimit = Tempolimit::Autobahn, bool Ueberholverbot=true);
     virtual ~Weg();
 
     static void vKopf();
@@ -30,18 +30,21 @@ public:
     double getTempolimit() const;
 
     std::unique_ptr<Fahrzeug> pAbgabe(const Fahrzeug &fahrzeug);
-
+    
     template <typename Aktion>
     void vVerzoegert(Aktion &&aktion)
     {
         p_vAktion.emplace_back(std::forward<Aktion>(aktion));
     }
 
-private:
+    double getVirtuelleSchranke() const;
+    private:
     double p_dLaenge = 0.0;
     Tempolimit p_eTempolimit;
     vertagt::VListe<std::unique_ptr<Fahrzeug>> p_pFahrzeuge;
     std::list<std::function<void()>> p_vAktion;
+    bool p_bUeberholverbot = true;
+    double p_dVirtuelleSchranke = 0.0;
 };
 
 #endif

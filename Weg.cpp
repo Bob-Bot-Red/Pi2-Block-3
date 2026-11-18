@@ -9,9 +9,9 @@ Weg::Weg()
 {
 }
 
-Weg::Weg(const std::string &sName, double dLaenge, Tempolimit eTempolimit)
+Weg::Weg(const std::string &sName, double dLaenge, Tempolimit eTempolimit, bool Ueberholverbot)
     : Simulationsobjekt(sName),
-      p_dLaenge(dLaenge), p_eTempolimit(eTempolimit)
+      p_dLaenge(dLaenge), p_eTempolimit(eTempolimit), p_bUeberholverbot(Ueberholverbot), p_dVirtuelleSchranke(dLaenge)
 {
 }
 
@@ -21,7 +21,10 @@ Weg::~Weg()
 
 void Weg::vSimulieren()
 {
+
     p_pFahrzeuge.vAktualisieren();
+
+    p_dVirtuelleSchranke = p_dLaenge;
 
     for (const auto &Autos : p_pFahrzeuge)
     {
@@ -30,6 +33,7 @@ void Weg::vSimulieren()
             continue;
         }
 
+        const double dAbschnittVorher = Autos->getAbschnittstrecke();
         try
         {
             Autos->vSimulieren();
@@ -38,8 +42,18 @@ void Weg::vSimulieren()
         {
             ausnahme.vBearbeiten();
         }
+
+        const double dAbschnittNachher = Autos->getAbschnittstrecke();
+
+        if(dAbschnittVorher < dAbschnittNachher)
+        {
+            p_dVirtuelleSchranke = dAbschnittNachher;
+        }
+        
         Autos->vZeichnen(*this);
+
     }
+
     for (auto &aktion : p_vAktion)
     {
         aktion();
@@ -125,4 +139,13 @@ std::unique_ptr<Fahrzeug> Weg::pAbgabe(const Fahrzeug &fahrzeug)
         }
     }
     return nullptr;
+}
+
+double Weg::getVirtuelleSchranke() const
+{
+    if (p_bUeberholverbot)
+    {
+        return p_dVirtuelleSchranke;
+    }
+    return p_dLaenge;
 }

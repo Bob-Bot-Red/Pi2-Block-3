@@ -25,8 +25,8 @@ Simulationsobjekt::~Simulationsobjekt()
 void Simulationsobjekt::vAusgeben(std::ostream &out) const
 {
     out << std::resetiosflags(std::ios::right) << std::setiosflags(std::ios::left)
-              << std::setw(5) << p_iID
-              << std::setw(15) << p_sName;
+        << std::setw(5) << p_iID
+        << std::setw(15) << p_sName;
 }
 
 int Simulationsobjekt::getID() const
@@ -57,4 +57,20 @@ std::ostream &operator<<(std::ostream &out, const Simulationsobjekt &s)
 {
     s.vAusgeben(out);
     return out;
+}
+
+void Simulationsobjekt::vEinlesen(std::istream &in)
+{
+    if(!p_sName.empty())
+    throw std::runtime_error("Einlesen ist nur bei unbekannten Objekten moeglich");
+
+    if(!(in>>p_sName))
+    throw std::runtime_error("Der Name konnte nicht eingelesen werden");
+
+}
+
+std::istream &operator>>(std::istream &in, Simulationsobjekt &oobjekt)
+{
+    oobjekt.vEinlesen(in);
+    return in;
 }

@@ -9,6 +9,7 @@
 #include "Fahren.h"
 #include "Parken.h"
 
+
 class Fahrzeug : public Simulationsobjekt
 {
 public:
@@ -30,6 +31,8 @@ public:
     void vNeueStrecke(Weg &Weg, double dStartZeitpunkt);
     double getAbschnittstrecke() const;
     virtual void vZeichnen(const Weg &FzgWeg) const;
+
+    void vEinlesen(std::istream &in) override;
 
 
 protected:

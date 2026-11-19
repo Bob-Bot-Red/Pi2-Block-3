@@ -19,6 +19,8 @@ public:
     PKW &operator=(const PKW &rhs);
     virtual void vZeichnen(const Weg &FzgWeg) const override;
 
+    void vEinlesen(std::istream &in) override;
+
 private:
     double p_dVerbrauch = 0.0;
     double p_dTankvolumen = 0.0;

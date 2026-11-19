@@ -17,6 +17,9 @@
 #include "vertagt_aktion.h"
 #include "vertagt_liste.h"
 #include "Kreuzung.h"
+#include <fstream>
+#include <exception>
+
 
 using namespace std;
 double dEpsilon = 0.001;
@@ -406,7 +409,6 @@ void vAufgabe_6a()
     std::cout << "\n";
 }
 
-
 void vAufgabe_7()
 {
     dGlobaleZeit = 0.0;
@@ -475,6 +477,35 @@ void vAufgabe_7()
     }
     vBeendeGrafik();
 }
+
+void vAufgabe_8()
+{
+    try
+    {
+        std::ifstream datei;
+        datei.exceptions(std::ios::failbit | std::ios::badbit); // failbit heißt Lesevorgang falsch, da bit erwartet ber nicht vorhanden | badbit ein Fehler, dass man nicht wegmachen kann bei Istream/Osteam
+        datei.open("VO.dat");
+
+        std::cout.exceptions(std::ios::failbit | std::ios::badbit);
+
+        Fahrrad fahrrad;
+        PKW pkw;
+        Kreuzung kreuzung("");
+
+        datei >> pkw >> fahrrad >> kreuzung;
+
+        std::cout << pkw << '\n'
+                  << fahrrad << '\n'
+                  << kreuzung << '\n';
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "Fehler beim Einlsen/Ausgeben:  "
+                  << e.what() << '\n'; 
+                  std::exit(EXIT_FAILURE);
+    }
+}
+
 int main()
 {
     /*
@@ -487,7 +518,8 @@ int main()
     vAufgabe_5();
     vAufgabe_6a();
     vAufgabe_6();
-    */
     vAufgabe_7();
+    */
+    void vAufgabe_8();
     return 0;
 }

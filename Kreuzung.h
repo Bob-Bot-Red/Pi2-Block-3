@@ -5,6 +5,7 @@
 #include "Weg.h"
 #include <memory>
 #include <list>
+#include <stdexcept>
 
 class Kreuzung : public Simulationsobjekt
 {
@@ -26,6 +27,8 @@ public:
         void vSimulieren() override;
 
         double getTankstelle() const;
+
+        void vEinlesen(std::istream &in) override;
 
 
 

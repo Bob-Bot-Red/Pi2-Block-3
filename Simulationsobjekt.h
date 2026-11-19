@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <limits>
+#include <stdexcept>
 
 class Simulationsobjekt
 {
@@ -20,7 +21,12 @@ public:
     bool operator==(const Simulationsobjekt &rhs) const;
     Simulationsobjekt(const Simulationsobjekt &) = delete;
     Simulationsobjekt &operator=(const Simulationsobjekt &rhs);
+
+    virtual void vEinlesen(std::istream &in);
+
+
     
+
 
 protected:
     double p_dZeit = 0.0;
@@ -34,4 +40,8 @@ private:
 std::ostream &operator<<(std::ostream &out, const Simulationsobjekt &s);
 
 
+std::istream &operator>>(std::istream &in, Simulationsobjekt &oobjekt);
+
+
 #endif
+

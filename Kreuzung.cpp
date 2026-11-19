@@ -91,3 +91,14 @@ double Kreuzung::getTankstelle() const
 {
     return p_dTankstelle;
 }
+
+void Kreuzung::vEinlesen(std::istream &in)
+{
+    Simulationsobjekt::vEinlesen(in);
+
+    if (!(in >> p_dTankstelle))
+        throw std::runtime_error("Tankstelleninhalt nicht einlesbar");
+
+    if (p_dTankstelle < 0.0)
+        p_dTankstelle = 0.0;
+}

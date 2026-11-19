@@ -5,6 +5,8 @@
 #include <iostream>
 #include <algorithm>
 #include "SimuClient.h"
+#include <stdexcept>
+
 
 extern double dGlobaleZeit;
 
@@ -96,4 +98,16 @@ void PKW::vZeichnen(const Weg &FzgWeg) const
 {
     const double dRelPosition = p_dAbschnittStrecke / FzgWeg.getLaenge();
     bZeichnePKW(getName(), FzgWeg.getName(), dRelPosition, dGeschwindigkeit(), p_dTankinhalt);
+}
+
+void PKW::vEinlesen(std::istream &in)
+{
+    Fahrzeug::vEinlesen(in);
+    if (!(in >> p_dVerbrauch >> p_dTankvolumen))
+        throw std::runtime_error("Verbrauch | Volumen vom PKW nicht einlesbr");
+
+    if (p_dTankvolumen < 0.0)
+        p_dTankvolumen = 0.0;
+
+        p_dTankinhalt = p_dTankvolumen / 2.0;
 }

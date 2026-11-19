@@ -9,7 +9,7 @@ Weg::Weg()
 {
 }
 
-Weg::Weg(const std::string &sName, double dLaenge, Tempolimit eTempolimit, bool Ueberholverbot)
+Weg::Weg(const std::string &sName, double dLaenge, Tempolimit eTempolimit, bool Ueberholverbot, std::shared_ptr<Kreuzung> pZielkreuzung)
     : Simulationsobjekt(sName),
       p_dLaenge(dLaenge), p_eTempolimit(eTempolimit), p_bUeberholverbot(Ueberholverbot), p_dVirtuelleSchranke(dLaenge)
 {
@@ -45,13 +45,12 @@ void Weg::vSimulieren()
 
         const double dAbschnittNachher = Autos->getAbschnittstrecke();
 
-        if(dAbschnittVorher < dAbschnittNachher)
+        if (dAbschnittVorher < dAbschnittNachher)
         {
             p_dVirtuelleSchranke = dAbschnittNachher;
         }
-        
-        Autos->vZeichnen(*this);
 
+        Autos->vZeichnen(*this);
     }
 
     for (auto &aktion : p_vAktion)
@@ -77,6 +76,21 @@ void Weg::vAusgeben(std::ostream &out) const
 double Weg::getTempolimit() const
 {
     return static_cast<double>(p_eTempolimit);
+}
+
+std::shared_ptr<Kreuzung> Weg::getZielKreuzung() const
+{
+    return p_pZielkreuzung.lock();
+}
+
+std::shared_ptr<Weg> Weg::getRueckweg() const
+{
+    return p_pRueckweg.lock();
+}
+
+void Weg::setRueckweg(const std::shared_ptr<Weg> &pRueckweg)
+{
+    p_pRueckweg = pRueckweg;
 }
 
 void Weg::vKopf()

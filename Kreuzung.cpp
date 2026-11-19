@@ -5,8 +5,9 @@
 #include <stdexcept>
 #include <utility>
 
-Kreuzung::Kreuzung(const std::string &sName, double dTankstelle = 0.0)
-    : Simulationsobjekt(sName), p_dTankstelle(dTankstelle > 0.0 ? dTankstelle : 0.0)
+Kreuzung::Kreuzung(const std::string &sName, double dTankstelle)
+    : Simulationsobjekt(sName), 
+    p_dTankstelle(dTankstelle > 0.0 ? dTankstelle : 0.0)
 {
 }
 
@@ -18,7 +19,7 @@ void Kreuzung::vVerbinde(
     double dLaenge,
     const std::shared_ptr<Kreuzung> &pStart,
     const std::shared_ptr<Kreuzung> &pZiel,
-    Tempolimit eTempolimit = Tempolimit::Autobahn,
+    Tempolimit eTempolimit,
     bool bUeberholverbot = true)
 {
     if (!pStart || !pZiel)

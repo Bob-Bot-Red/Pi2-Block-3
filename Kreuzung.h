@@ -4,6 +4,7 @@
 #include "vertagt_liste.h"
 #include "Weg.h"
 #include <memory>
+#include <list>
 
 class Kreuzung : public Simulationsobjekt
 {
@@ -24,7 +25,7 @@ public:
         void vSimulieren() override;
 
 protected:
-    vertagt::VListe<std::unique_ptr<Weg>> p_pWeg;
+    std::list<std::shared_ptr<Weg>> p_pWeg;
     double p_dTankstelle = 0;
 };
 

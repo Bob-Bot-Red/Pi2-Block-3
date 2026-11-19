@@ -520,6 +520,6 @@ int main()
     vAufgabe_6();
     vAufgabe_7();
     */
-    void vAufgabe_8();
+    vAufgabe_8();
     return 0;
 }

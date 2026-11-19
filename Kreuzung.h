@@ -19,10 +19,16 @@ public:
         const std::shared_ptr<Kreuzung> &pZiel,
         Tempolimit eTempolimit = Tempolimit::Autobahn,
         bool bUeberholverbot = true);
+        std::shared_ptr<Weg> pZufaelligerWeg(Weg &ankuftsWeg) const;
 
         void vTanken(Fahrzeug &fahrzeug);
         void vAnnahme(std::unique_ptr<Fahrzeug> fahrzeug, double dStartzeit);
         void vSimulieren() override;
+
+        double getTankstelle() const;
+
+
+
 
 protected:
     std::list<std::shared_ptr<Weg>> p_pWeg;

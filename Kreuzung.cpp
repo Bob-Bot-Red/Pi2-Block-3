@@ -4,16 +4,18 @@
 
 #include <stdexcept>
 #include <utility>
+#include <random>
+#include <vector>
 
 Kreuzung::Kreuzung(const std::string &sName, double dTankstelle)
-    : Simulationsobjekt(sName), 
-    p_dTankstelle(dTankstelle > 0.0 ? dTankstelle : 0.0)
+    : Simulationsobjekt(sName),
+      p_dTankstelle(dTankstelle > 0.0 ? dTankstelle : 0.0)
 {
 }
 
 Kreuzung::~Kreuzung() = default;
 
-void Kreuzung::vVerbinde( const std::string &sNameHin, const std::string &sNameRueck, double dLaenge, const std::shared_ptr<Kreuzung> &pStart, const std::shared_ptr<Kreuzung> &pZiel, Tempolimit eTempolimit, bool bUeberholverbot)
+void Kreuzung::vVerbinde(const std::string &sNameHin, const std::string &sNameRueck, double dLaenge, const std::shared_ptr<Kreuzung> &pStart, const std::shared_ptr<Kreuzung> &pZiel, Tempolimit eTempolimit, bool bUeberholverbot)
 {
     if (!pStart || !pZiel)
     {
@@ -29,35 +31,63 @@ void Kreuzung::vVerbinde( const std::string &sNameHin, const std::string &sNameR
 
 void Kreuzung::vTanken(Fahrzeug &fahrzeug)
 {
-    if(p_dTankstelle <=0.0)
-    return;
+    if (p_dTankstelle <= 0.0)
+        return;
 
     const double dGetankt = fahrzeug.dTanken();
     p_dTankstelle -= dGetankt;
 
-    if(p_dTankstelle < 0.0)
+    if (p_dTankstelle < 0.0)
     {
         p_dTankstelle = 0.0;
     }
 }
 
-
 void Kreuzung::vAnnahme(std::unique_ptr<Fahrzeug> fahrzeug, double dStartzeit)
 {
-    if(!fahrzeug)
-    return;
+    if (!fahrzeug)
+        return;
 
-    if(p_pWeg.empty())
-    throw std::logic_error("vAnnahme: Kreuzung hat keinen Weg");
-    
+    if (p_pWeg.empty())
+        throw std::logic_error("vAnnahme: Kreuzung hat keinen Weg");
+
     vTanken(*fahrzeug);
 
     p_pWeg.front()->vAnnahme(std::move(fahrzeug), dStartzeit);
 }
 
-
 void Kreuzung::vSimulieren()
 {
-    for(const auto &pWeg : p_pWeg)
-    pWeg->vSimulieren();
+    for (const auto &pWeg : p_pWeg)
+        pWeg->vSimulieren();
+}
+
+std::shared_ptr<Weg> Kreuzung::pZufaelligerWeg(Weg &ankuftsWeg) const
+{
+    const std::shared_ptr<Weg> pRueckweg = ankuftsWeg.getRueckweg();
+    std::vector<std::shared_ptr<Weg>> vMoeglicheWege;
+
+    for (const auto &pWeg : p_pWeg)
+    {
+        if (pWeg && pWeg != pRueckweg)
+        {
+            vMoeglicheWege.push_back(pWeg);
+        }
+    }
+    if (vMoeglicheWege.empty())
+    {
+        if (pRueckweg)
+            return pRueckweg;
+
+        throw std::logic_error("Kreuzung hat keinen passenden Weg & Rueckweg");
+    }
+    static std::mt19937 zufallsgen(std::random_device{}());
+    std::uniform_int_distribution<std::size_t> verteilung(0, vMoeglicheWege.size() - 1);
+
+    return vMoeglicheWege[verteilung(zufallsgen)];
+}
+
+double Kreuzung::getTankstelle() const
+{
+    return p_dTankstelle;
 }

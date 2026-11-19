@@ -16,6 +16,7 @@
 #include "SimuClientSocket.h"
 #include "vertagt_aktion.h"
 #include "vertagt_liste.h"
+#include "Kreuzung.h"
 
 using namespace std;
 double dEpsilon = 0.001;
@@ -228,7 +229,7 @@ void vAufgabe_5()
         Autobahn1.vAnnahme(std::make_unique<PKW>("Audi", 80.0, 6.0));
         Autobahn1.vAnnahme(std::make_unique<PKW>("Mercedes", 100.0, 68.0));
         Autobahn1.vAnnahme(std::make_unique<Fahrrad>("lol", 35.0));
-        Autobahn1.vAnnahme(std::make_unique<PKW>("Parkend", 100.0, 5.0),1.5);
+        Autobahn1.vAnnahme(std::make_unique<PKW>("Parkend", 100.0, 5.0), 1.5);
 
         for (int i = 0; i < 3; i++)
         {
@@ -405,6 +406,75 @@ void vAufgabe_6a()
     std::cout << "\n";
 }
 
+
+void vAufgabe_7()
+{
+    dGlobaleZeit = 0.0;
+
+    if (!bInitialisiereGrafik(1100, 700))
+    {
+        std::cerr << "Grafik konnte nicht launchen.\n";
+        return;
+    }
+
+    auto pKr1 = std::make_shared<Kreuzung>("Kr1");
+    auto pKr2 = std::make_shared<Kreuzung>("Kr2", 1000.0);
+    auto pKr3 = std::make_shared<Kreuzung>("Kr3");
+    auto pKr4 = std::make_shared<Kreuzung>("Kr4");
+
+    Kreuzung::vVerbinde("W12", "W21", 40, pKr1, pKr2, Tempolimit::Innerorts, true);
+    Kreuzung::vVerbinde("W23a", "W32a", 115, pKr2, pKr3, Tempolimit::Autobahn, false);
+    Kreuzung::vVerbinde("W23b", "W32b", 40, pKr2, pKr3, Tempolimit::Innerorts, true);
+    Kreuzung::vVerbinde("W24", "W42", 55, pKr2, pKr4, Tempolimit::Innerorts, true);
+    Kreuzung::vVerbinde("W34", "W43", 85, pKr3, pKr4, Tempolimit::Autobahn, false);
+    Kreuzung::vVerbinde("W44a", "W44b", 130, pKr4, pKr4, Tempolimit::Landstrasse, false);
+
+    int strasse1[] = {680, 40, 680, 300};
+    int strasse2[] = {680, 300, 850, 300, 970, 390, 970, 500, 850, 570, 680, 570};
+    int strasse3[] = {680, 300, 680, 570};
+    int strasse4[] = {680, 300, 320, 300};
+    int strasse5[] = {680, 570, 500, 570, 350, 510, 320, 420, 320, 300};
+    int strasse6[] = {320, 300, 320, 150, 200, 60, 80, 90, 70, 250, 170, 300, 320, 300};
+
+    const bool bStrasseGezeichnet =
+        bZeichneStrasse("W12", "W21", 40, 2, strasse1) &&
+        bZeichneStrasse("W23a", "W32a", 115, 6, strasse2) &&
+        bZeichneStrasse("W23b", "W32b", 40, 2, strasse3) &&
+        bZeichneStrasse("W24", "W42", 55, 2, strasse4) &&
+        bZeichneStrasse("W34", "W43", 85, 5, strasse5) &&
+        bZeichneStrasse("W44a", "W44b", 130, 7, strasse6);
+
+    if (!bStrasseGezeichnet)
+    {
+        std::cerr << "Mindest eine Sraße nicht gezeichnet";
+        vBeendeGrafik();
+        return;
+    }
+
+    bZeichneKreuzung(680, 40);
+    bZeichneKreuzung(680, 300);
+    bZeichneKreuzung(680, 570);
+    bZeichneKreuzung(320, 300);
+
+    pKr1->vAnnahme(std::make_unique<PKW>("Audi", 120.0, 8.0), 0.0);
+    pKr1->vAnnahme(std::make_unique<PKW>("BMW", 100.0, 7.0), 1.0);
+    pKr1->vAnnahme(std::make_unique<Fahrrad>("BMX", 25.0), 2.0);
+
+    constexpr double dZeitschritte = 0.25;
+    constexpr int iAnzahlSchritte = 80;
+
+    for (int i = 0; i <= iAnzahlSchritte; ++i)
+    {
+        dGlobaleZeit = i * dZeitschritte;
+        vSetzeZeit(dGlobaleZeit);
+        pKr1->vSimulieren();
+        pKr2->vSimulieren();
+        pKr3->vSimulieren();
+        pKr4->vSimulieren();
+        vSleep(100);
+    }
+    vBeendeGrafik();
+}
 int main()
 {
     /*
@@ -416,7 +486,8 @@ int main()
     vAufgabe_3();
     vAufgabe_5();
     vAufgabe_6a();
+    vAufgabe_6();
     */
-   vAufgabe_6();
+    vAufgabe_7();
     return 0;
 }

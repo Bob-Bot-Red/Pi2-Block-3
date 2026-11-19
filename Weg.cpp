@@ -11,7 +11,7 @@ Weg::Weg()
 
 Weg::Weg(const std::string &sName, double dLaenge, Tempolimit eTempolimit, bool Ueberholverbot, std::shared_ptr<Kreuzung> pZielkreuzung)
     : Simulationsobjekt(sName),
-      p_dLaenge(dLaenge), p_eTempolimit(eTempolimit), p_bUeberholverbot(Ueberholverbot), p_dVirtuelleSchranke(dLaenge)
+      p_dLaenge(dLaenge), p_eTempolimit(eTempolimit), p_bUeberholverbot(Ueberholverbot), p_dVirtuelleSchranke(dLaenge), p_pZielkreuzung(pZielkreuzung)
 {
 }
 

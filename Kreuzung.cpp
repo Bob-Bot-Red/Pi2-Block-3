@@ -13,14 +13,7 @@ Kreuzung::Kreuzung(const std::string &sName, double dTankstelle)
 
 Kreuzung::~Kreuzung() = default;
 
-void Kreuzung::vVerbinde(
-    const std::string &sNameHin,
-    const std::string &sNameRueck,
-    double dLaenge,
-    const std::shared_ptr<Kreuzung> &pStart,
-    const std::shared_ptr<Kreuzung> &pZiel,
-    Tempolimit eTempolimit,
-    bool bUeberholverbot = true)
+void Kreuzung::vVerbinde( const std::string &sNameHin, const std::string &sNameRueck, double dLaenge, const std::shared_ptr<Kreuzung> &pStart, const std::shared_ptr<Kreuzung> &pZiel, Tempolimit eTempolimit, bool bUeberholverbot)
 {
     if (!pStart || !pZiel)
     {

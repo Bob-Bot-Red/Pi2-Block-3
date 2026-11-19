@@ -7,7 +7,6 @@
 #include "SimuClient.h"
 #include <stdexcept>
 
-
 extern double dGlobaleZeit;
 
 PKW::PKW()
@@ -107,7 +106,9 @@ void PKW::vEinlesen(std::istream &in)
         throw std::runtime_error("Verbrauch | Volumen vom PKW nicht einlesbr");
 
     if (p_dTankvolumen < 0.0)
+    {
         p_dTankvolumen = 0.0;
+    }
 
-        p_dTankinhalt = p_dTankvolumen / 2.0;
+    p_dTankinhalt = p_dTankvolumen / 2.0;
 }

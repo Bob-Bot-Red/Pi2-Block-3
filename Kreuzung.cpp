@@ -6,6 +6,7 @@
 #include <utility>
 #include <random>
 #include <vector>
+#include <iomanip>
 
 Kreuzung::Kreuzung(const std::string &sName, double dTankstelle)
     : Simulationsobjekt(sName),
@@ -101,4 +102,10 @@ void Kreuzung::vEinlesen(std::istream &in)
 
     if (p_dTankstelle < 0.0)
         p_dTankstelle = 0.0;
+}
+
+void Kreuzung::vAusgeben(std::ostream &out) const
+{
+    Simulationsobjekt::vAusgeben(out);
+    out << std::setw(20) << p_dTankstelle;
 }

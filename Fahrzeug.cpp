@@ -137,6 +137,6 @@ void Fahrzeug::vEinlesen(std::istream &in)
     if(!(in >> p_dMaxGeschwindigkeit))
     throw std::runtime_error("Maxgesch. nicht einlesbar");
 
-    if(p_dMaxGeschwindigkeit < 0.0);
+    if(p_dMaxGeschwindigkeit < 0.0)
     p_dMaxGeschwindigkeit = 0.0;
 }

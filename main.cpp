@@ -19,7 +19,7 @@
 #include "Kreuzung.h"
 #include <fstream>
 #include <exception>
-
+#include <cstdlib>
 
 using namespace std;
 double dEpsilon = 0.001;
@@ -501,8 +501,8 @@ void vAufgabe_8()
     catch (const std::exception &e)
     {
         std::cerr << "Fehler beim Einlsen/Ausgeben:  "
-                  << e.what() << '\n'; 
-                  std::exit(EXIT_FAILURE);
+                  << e.what() << '\n';
+        std::exit(EXIT_FAILURE);
     }
 }
 

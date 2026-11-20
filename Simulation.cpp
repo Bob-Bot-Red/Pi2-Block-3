@@ -123,8 +123,6 @@ void Simulation::vEinlesen(std::istream &in)
             }
         }
     }
-
-    asda
     catch (const std::exception &e)
     {
 

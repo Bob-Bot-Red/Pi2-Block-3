@@ -3,6 +3,7 @@
 #include "Kreuzung.h"
 #include "PKW.h"
 #include "Tempolimit.h"
+#include "SimuClient.h"
 
 #include <iostream>
 #include <limits>
@@ -12,7 +13,7 @@
 #include <string>
 #include <utility>
 #include <cmath>
-
+#include <vector>
 
 extern double dEpsilon;
 extern double dGlobaleZeit;
@@ -50,7 +51,7 @@ std::shared_ptr<Kreuzung> Simulation::pKreuzungFinden(const std::string &sName) 
     return it->second;
 }
 
-void Simulation::vEinlesen(std::istream &in)
+void Simulation::vEinlesen(std::istream &in, bool bMitGrafik)
 {
     std::string sZeile;
     std::size_t izeile = 0;
@@ -69,6 +70,11 @@ void Simulation::vEinlesen(std::istream &in)
             {
                 auto pKreuzung = std::make_shared<Kreuzung>("");
                 zeile >> *pKreuzung;
+                int x = 0;
+                int y = 0;
+                if (bMitGrafik && !(zeile >> x >> y))
+                    throw std::runtime_error("Kreuzungskoordinaten fehlen");
+
                 vPruefezeilenende(zeile);
 
                 auto ergebnis = p_pKreuzungen.emplace(pKreuzung->getName(), pKreuzung);
@@ -77,7 +83,11 @@ void Simulation::vEinlesen(std::istream &in)
                 {
                     throw std::runtime_error("kreuzung nicht gefunden: " + pKreuzung->getName());
                 }
+
+                if (bMitGrafik && !bZeichneKreuzung(x, y))
+                    throw std::runtime_error("Kreuzung konnte nicht gezeichnet werdenx");
             }
+
             else if (sTyp == "STRASSE")
             {
                 std::string sQuelle, sZiel, sHin, sRueck;
@@ -87,13 +97,36 @@ void Simulation::vEinlesen(std::istream &in)
                 if (!(zeile >> sQuelle >> sZiel >> sHin >> sRueck >> dLaenge >> iLimit >> iVerbot))
                     throw std::runtime_error("Strasse Info fehlt");
 
+                int iAnzahlkoordinaten = 0;
+                std::vector<int> koordinaten;
+
+                if (bMitGrafik)
+                {
+                    if (!(zeile >> iAnzahlkoordinaten) || iAnzahlkoordinaten < 2)
+                        throw std::runtime_error("Eine Kreuzung braucht mindestens 2 Koordinatenpaare");
+                }
+
+                koordinaten.resize(2 * iAnzahlkoordinaten);
+                for (int &wert : koordinaten)
+                {
+                    if (!(zeile >> wert))
+                        throw std::runtime_error("Strassenkoordinaten fehlen");
+                }
+
                 vPruefezeilenende(zeile);
 
                 if (iVerbot != 0 && iVerbot != 1)
                     throw std::runtime_error("Überholverbot muss = 0/1 sein");
 
+                    auto pQuelle = pKreuzungFinden(sQuelle);
+                    auto pZiel = pKreuzungFinden(sZiel);
+                    const auto eLimit = eTempoLimitAusZahl(iLimit);
+
+                    if(bMitGrafik && ! bZeichneStrasse(sHin, sRueck, static_cast<int>(dLaenge), iAnzahlkoordinaten, koordinaten.data()))
+                    throw std::runtime_error("Straße konnte nicht gezeichnet werden");
                 Kreuzung::vVerbinde(sHin, sRueck, dLaenge, pKreuzungFinden(sQuelle), pKreuzungFinden(sZiel), eTempoLimitAusZahl(iLimit), iVerbot == 1);
             }
+
             else if (sTyp == "PKW")
             {
                 auto pFahrzeug = std::make_unique<PKW>();
@@ -107,6 +140,7 @@ void Simulation::vEinlesen(std::istream &in)
                 vPruefezeilenende(zeile);
                 pKreuzungFinden(sStart)->vAnnahme(std::move(pFahrzeug), dStartZeit);
             }
+
             else if (sTyp == "FAHRRAD")
             {
                 auto pFahrzeug = std::make_unique<Fahrrad>();
@@ -119,6 +153,7 @@ void Simulation::vEinlesen(std::istream &in)
                 vPruefezeilenende(zeile);
                 pKreuzungFinden(sStart)->vAnnahme(std::move(pFahrzeug), dStartzeit);
             }
+
             else
             {
                 throw std::runtime_error("unbekannte Eingabe" + sTyp);
@@ -144,7 +179,14 @@ void Simulation::vSimulieren(double dDauer, double dZeitschritt)
     for (std::size_t i = 0; i <= iSchritte; ++i)
     {
         dGlobaleZeit = dStartzeit + i * dZeitschritt;
+        if(p_bMitGrafik)
+        vSetzeZeit(dGlobaleZeit);
+
         for (const auto &paar : p_pKreuzungen)
             paar.second->vSimulieren();
+
+            if(p_bMitGrafik)
+            vSleep(100);
     }
 }
+

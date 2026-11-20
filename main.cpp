@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <random>
 #include <ctime>
+#include "Simulation.h"
 #include "Simulationsobjekt.h"
 #include "Weg.h"
 #include "Fahrzeug.h"
@@ -506,6 +507,55 @@ void vAufgabe_8()
     }
 }
 
+void vAufgabe_9()
+{
+    std::ifstream datei("Simu.dat");
+    if (!datei)
+        ;
+    {
+        std::cerr << "Simu.dat konnte nicht geoeffnet werden\n";
+        return;
+    }
+    try
+    {
+        Simulation simulation;
+        simulation.vEinlesen(datei, true);
+        simulation.vSimulieren(100.0, 0.25);
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "Grafische Simulation abgebrochen: " << e.what() << '\n';
+    }
+}
+
+void vAufgabe_9a()
+{
+    std::ifstream datei("SimuDisplay.dat");
+    if(!datei)
+    {
+        std::cerr << "SimuDisplay.dat konnte nicht geoeffnet werden\n";
+        return;
+    }
+
+    if(!bInitialisiereGrafik(1000,900))
+    {
+        std::cerr << "Grafik konnte nicht gestartet werden\n";
+        return;
+    }
+
+    try
+    {
+        Simulation simulation;
+        simulation.vEinlesen(datei, true);
+        simulation.vSimulieren(100.0, 0.25);
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << "Grafik Simulation abgebrochen: " << e.what() << '\n';
+    }
+    vBeendeGrafik();
+}
+
 int main()
 {
     /*
@@ -519,7 +569,9 @@ int main()
     vAufgabe_6a();
     vAufgabe_6();
     vAufgabe_7();
-    */
     vAufgabe_8();
+    */
+    vAufgabe_9();
+    vAufgabe_9a();
     return 0;
 }

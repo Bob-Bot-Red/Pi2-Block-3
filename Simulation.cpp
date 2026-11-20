@@ -12,7 +12,6 @@
 #include <string>
 #include <utility>
 
-
 extern double dEpsilon;
 extern double dGlobaleZeit;
 
@@ -76,54 +75,56 @@ void Simulation::vEinlesen(std::istream &in)
                 {
                     throw std::runtime_error("kreuzung nicht gefunden: " + pKreuzung->getName());
                 }
-                else if (sTyp == "STRASSE")
-                {
-                    std::string sQuelle, sZiel, sHin, sRueck;
-                    double dLaenge;
-                    int iLimit, iVerbot;
+            }
+            else if (sTyp == "STRASSE")
+            {
+                std::string sQuelle, sZiel, sHin, sRueck;
+                double dLaenge;
+                int iLimit, iVerbot;
 
-                    if (!(zeile >> sQuelle >> sZiel >> sHin >> sRueck >> dLaenge >> iLimit >> iVerbot))
-                        throw std::runtime_error("Strasse Info fehlt");
+                if (!(zeile >> sQuelle >> sZiel >> sHin >> sRueck >> dLaenge >> iLimit >> iVerbot))
+                    throw std::runtime_error("Strasse Info fehlt");
 
-                    vPruefezeilenende(zeile);
+                vPruefezeilenende(zeile);
 
-                    if (iVerbot != 0 && iVerbot != 1)
-                        throw std::runtime_error("Überholverbot muss = 0/1 sein");
+                if (iVerbot != 0 && iVerbot != 1)
+                    throw std::runtime_error("Überholverbot muss = 0/1 sein");
 
-                    Kreuzung::vVerbinde(sHin, sRueck, dLaenge, pKreuzungFinden(sQuelle), pKreuzungFinden(sZiel), eTempoLimitAusZahl(iLimit), iVerbot == 1);
-                }
-                else if (sTyp == "PKW")
-                {
-                    auto pFahrzeug = std::make_unique<PKW>();
-                    zeile >> *pFahrzeug;
+                Kreuzung::vVerbinde(sHin, sRueck, dLaenge, pKreuzungFinden(sQuelle), pKreuzungFinden(sZiel), eTempoLimitAusZahl(iLimit), iVerbot == 1);
+            }
+            else if (sTyp == "PKW")
+            {
+                auto pFahrzeug = std::make_unique<PKW>();
+                zeile >> *pFahrzeug;
 
-                    std::string sStart;
-                    double dStartZeit;
-                    if (!(zeile >> sStart >> dStartZeit))
-                        throw std::runtime_error("PKW Info fehlen");
+                std::string sStart;
+                double dStartZeit;
+                if (!(zeile >> sStart >> dStartZeit))
+                    throw std::runtime_error("PKW Info fehlen");
 
-                    vPruefezeilenende(zeile);
-                    pKreuzungFinden(sStart)->vAnnahme(std::move(pFahrzeug), dStartZeit);
-                }
-                else if (sTyp == "FAHRRAD")
-                {
-                    auto pFahrzeug = std::make_unique<Fahrrad>();
-                    zeile >> *pFahrzeug;
+                vPruefezeilenende(zeile);
+                pKreuzungFinden(sStart)->vAnnahme(std::move(pFahrzeug), dStartZeit);
+            }
+            else if (sTyp == "FAHRRAD")
+            {
+                auto pFahrzeug = std::make_unique<Fahrrad>();
+                zeile >> *pFahrzeug;
 
-                    std::string sStart;
-                    double dStartzeit;
-                    if (!(zeile >> sStart >> dStartzeit))
-                        throw std::runtime_error("Fahrrad Info fehlen");
-                    vPruefezeilenende(zeile);
-                    pKreuzungFinden(sStart)->vAnnahme(std::move(pFahrzeug), dStartzeit);
-                }
-                else
-                {
-                    throw std::runtime_error("unbekannte Eingabe" + sTyp);
-                }
+                std::string sStart;
+                double dStartzeit;
+                if (!(zeile >> sStart >> dStartzeit))
+                    throw std::runtime_error("Fahrrad Info fehlen");
+                vPruefezeilenende(zeile);
+                pKreuzungFinden(sStart)->vAnnahme(std::move(pFahrzeug), dStartzeit);
+            }
+            else
+            {
+                throw std::runtime_error("unbekannte Eingabe" + sTyp);
             }
         }
     }
+
+    asda
     catch (const std::exception &e)
     {
 
@@ -134,16 +135,16 @@ void Simulation::vEinlesen(std::istream &in)
 
 void Simulation::vSimulieren(double dDauer, double dZeitschritt)
 {
-    if(dDauer < 0.0  || dZeitschritt <= 0.0)
-    throw std::invalid_argument("Dauer muss >= 0 und Zeitschritt muss > 0 sein");
+    if (dDauer < 0.0 || dZeitschritt <= 0.0)
+        throw std::invalid_argument("Dauer muss >= 0 und Zeitschritt muss > 0 sein");
 
     const double dStartzeit = dGlobaleZeit;
     const auto iSchritte = static_cast<std::size_t>(std::floor((dDauer + dEpsilon) / dZeitschritt));
 
-    for(std::size_t i = 0; i <= iSchritte; ++i)
+    for (std::size_t i = 0; i <= iSchritte; ++i)
     {
         dGlobaleZeit = dStartzeit + i * dZeitschritt;
-        for(const auto& paar : p_pKreuzungen)
-        paar.second->vSimulieren();
+        for (const auto &paar : p_pKreuzungen)
+            paar.second->vSimulieren();
     }
 }

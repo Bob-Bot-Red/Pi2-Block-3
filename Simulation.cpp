@@ -11,6 +11,8 @@
 #include <stdexcept>
 #include <string>
 #include <utility>
+#include <cmath>
+
 
 extern double dEpsilon;
 extern double dGlobaleZeit;

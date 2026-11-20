@@ -488,8 +488,8 @@ void vAufgabe_8()
 
         std::cout.exceptions(std::ios::failbit | std::ios::badbit);
 
-        Fahrrad fahrrad;
         PKW pkw;
+        Fahrrad fahrrad;
         Kreuzung kreuzung("");
 
         datei >> pkw >> fahrrad >> kreuzung;

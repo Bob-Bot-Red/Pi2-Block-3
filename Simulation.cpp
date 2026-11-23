@@ -53,7 +53,7 @@ std::shared_ptr<Kreuzung> Simulation::pKreuzungFinden(const std::string &sName) 
 
 void Simulation::vEinlesen(std::istream &in, bool bMitGrafik)
 {
-    bMitGrafik = p_bMitGrafik;
+    p_bMitGrafik = bMitGrafik;
     std::string sZeile;
     std::size_t izeile = 0;
 

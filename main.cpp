@@ -6,6 +6,9 @@
 #include <algorithm>
 #include <random>
 #include <ctime>
+#include <fstream>
+#include <exception>
+#include <cstdlib>
 #include "Simulation.h"
 #include "Simulationsobjekt.h"
 #include "Weg.h"
@@ -18,9 +21,6 @@
 #include "vertagt_aktion.h"
 #include "vertagt_liste.h"
 #include "Kreuzung.h"
-#include <fstream>
-#include <exception>
-#include <cstdlib>
 
 using namespace std;
 double dEpsilon = 0.001;
@@ -509,6 +509,7 @@ void vAufgabe_8()
 
 void vAufgabe_9()
 {
+
     std::ifstream datei("Simu.dat");
     if (!datei)
     {
@@ -517,6 +518,7 @@ void vAufgabe_9()
     }
     try
     {
+        dGlobaleZeit = 0.0;
         Simulation simulation;
         simulation.vEinlesen(datei, false);
         simulation.vSimulieren(100.0, 0.25);
@@ -544,6 +546,7 @@ void vAufgabe_9a()
 
     try
     {
+        dGlobaleZeit = 0.0;
         Simulation simulation;
         simulation.vEinlesen(datei, true);
         simulation.vSimulieren(100.0, 0.25);

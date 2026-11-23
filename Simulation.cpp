@@ -53,6 +53,7 @@ std::shared_ptr<Kreuzung> Simulation::pKreuzungFinden(const std::string &sName) 
 
 void Simulation::vEinlesen(std::istream &in, bool bMitGrafik)
 {
+    bMitGrafik = p_bMitGrafik;
     std::string sZeile;
     std::size_t izeile = 0;
 
@@ -116,15 +117,15 @@ void Simulation::vEinlesen(std::istream &in, bool bMitGrafik)
                 vPruefezeilenende(zeile);
 
                 if (iVerbot != 0 && iVerbot != 1)
-                    throw std::runtime_error("Überholverbot muss = 0/1 sein");
+                throw std::runtime_error("Überholverbot muss = 0/1 sein");
 
-                    auto pQuelle = pKreuzungFinden(sQuelle);
-                    auto pZiel = pKreuzungFinden(sZiel);
-                    const auto eLimit = eTempoLimitAusZahl(iLimit);
+                auto pQuelle = pKreuzungFinden(sQuelle);
+                auto pZiel = pKreuzungFinden(sZiel);
+                const auto eLimit = eTempoLimitAusZahl(iLimit);
 
-                    if(bMitGrafik && ! bZeichneStrasse(sHin, sRueck, static_cast<int>(dLaenge), iAnzahlkoordinaten, koordinaten.data()))
+                if (bMitGrafik && !bZeichneStrasse(sHin, sRueck, static_cast<int>(dLaenge), iAnzahlkoordinaten, koordinaten.data()))
                     throw std::runtime_error("Straße konnte nicht gezeichnet werden");
-                Kreuzung::vVerbinde(sHin, sRueck, dLaenge, pKreuzungFinden(sQuelle), pKreuzungFinden(sZiel), eTempoLimitAusZahl(iLimit), iVerbot == 1);
+                Kreuzung::vVerbinde(sHin, sRueck, dLaenge,pQuelle, pZiel, eLimit, iVerbot == 1);
             }
 
             else if (sTyp == "PKW")
@@ -179,14 +180,15 @@ void Simulation::vSimulieren(double dDauer, double dZeitschritt)
     for (std::size_t i = 0; i <= iSchritte; ++i)
     {
         dGlobaleZeit = dStartzeit + i * dZeitschritt;
-        if(p_bMitGrafik)
-        vSetzeZeit(dGlobaleZeit);
+        if (p_bMitGrafik)
+            vSetzeZeit(dGlobaleZeit);
 
         for (const auto &paar : p_pKreuzungen)
             paar.second->vSimulieren();
 
-            if(p_bMitGrafik)
+        if (p_bMitGrafik)
+        {
             vSleep(100);
+        }
     }
 }
-

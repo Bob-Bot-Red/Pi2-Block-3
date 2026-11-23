@@ -511,7 +511,6 @@ void vAufgabe_9()
 {
     std::ifstream datei("Simu.dat");
     if (!datei)
-        ;
     {
         std::cerr << "Simu.dat konnte nicht geoeffnet werden\n";
         return;
@@ -519,7 +518,7 @@ void vAufgabe_9()
     try
     {
         Simulation simulation;
-        simulation.vEinlesen(datei, true);
+        simulation.vEinlesen(datei, false);
         simulation.vSimulieren(100.0, 0.25);
     }
     catch (const std::exception &e)

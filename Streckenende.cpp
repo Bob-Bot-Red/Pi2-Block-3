@@ -48,9 +48,9 @@ void Streckenende::vBearbeiten()
                                pKreuzung->vTanken(*pAbgegebenesFahrzeug);
 
                                std::cout << std::resetiosflags(std::ios::right) << std::setiosflags(std::ios::left)
-                                         << std::setw(10) << "Zeit" << ":" << dGlobaleZeit << '\n'
-                                         << std::setw(10) << "Kreuzung " << ":" << pKreuzung->getName() << " " << pKreuzung->getTankstelle() << "\n"
-                                         << std::setw(10) <<"Wechsel" << ":" << pAlterWeg->getName() << " -> "<< pNeuerWeg->getName() 
-                                         << std::setw(10)<< "Fahrzeug: " << ":" << *pAbgegebenesFahrzeug << "\n";
+                                         << "Zeit:   "<< dGlobaleZeit << '\n'
+                                         << "Kreuzung:   " << pKreuzung->getName() << "   " << pKreuzung->getTankstelle() << "\n"
+                                         <<"Wechsel:   " << pAlterWeg->getName() << " -> "<< pNeuerWeg->getName()  << '\n'
+                                         << "Fahrzeug:   " << *pAbgegebenesFahrzeug << "\n" << '\n' << '\n';
                                pNeuerWeg->vAnnahme(std::move(pAbgegebenesFahrzeug)); });
 }

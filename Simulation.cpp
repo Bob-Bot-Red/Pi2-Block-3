@@ -164,7 +164,7 @@ void Simulation::vEinlesen(std::istream &in, bool bMitGrafik)
     catch (const std::exception &e)
     {
 
-        std::cerr << "Fehlet in Zeile " << izeile << ": " << e.what() << '\n';
+        std::cerr << "Fehlt in Zeile " << izeile << ": " << e.what() << '\n';
         throw;
     }
 }

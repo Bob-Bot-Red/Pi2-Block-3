@@ -525,7 +525,7 @@ void vAufgabe_9()
     }
     catch (const std::exception &e)
     {
-        std::cerr << "Grafische Simulation abgebrochen: " << e.what() << '\n';
+        std::cerr << "Simulation abgebrochen " << e.what() << '\n';
     }
 }
 
@@ -572,8 +572,8 @@ int main()
     vAufgabe_6();
     vAufgabe_7();
     vAufgabe_8();
-    */
-    vAufgabe_9();
     vAufgabe_9a();
+    */
+   vAufgabe_9();
     return 0;
 }

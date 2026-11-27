@@ -570,10 +570,10 @@ int main()
     vAufgabe_5();
     vAufgabe_6a();
     vAufgabe_6();
+    vAufgabe_9();
     vAufgabe_7();
-    vAufgabe_8();
     vAufgabe_9a();
     */
-   vAufgabe_9();
+   vAufgabe_8();
     return 0;
 }

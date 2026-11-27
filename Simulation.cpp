@@ -30,7 +30,7 @@ namespace
     Tempolimit eTempoLimitAusZahl(int iTempolimit)
     {
         switch (iTempolimit)
-        {
+        { 
         case 1:
             return Tempolimit::Innerorts;
         case 2:
@@ -82,7 +82,7 @@ void Simulation::vEinlesen(std::istream &in, bool bMitGrafik)
 
                 if (!ergebnis.second)
                 {
-                    throw std::runtime_error("kreuzung nicht gefunden: " + pKreuzung->getName());
+                    throw std::runtime_error("kreuzung bereits vorhanden: " + pKreuzung->getName());
                 }
 
                 if (bMitGrafik && !bZeichneKreuzung(x, y))
@@ -125,6 +125,8 @@ void Simulation::vEinlesen(std::istream &in, bool bMitGrafik)
 
                 if (bMitGrafik && !bZeichneStrasse(sHin, sRueck, static_cast<int>(dLaenge), iAnzahlkoordinaten, koordinaten.data()))
                     throw std::runtime_error("Straße konnte nicht gezeichnet werden");
+
+
                 Kreuzung::vVerbinde(sHin, sRueck, dLaenge,pQuelle, pZiel, eLimit, iVerbot == 1);
             }
 
